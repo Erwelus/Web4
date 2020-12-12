@@ -61,6 +61,7 @@ public class SecurityController {
     }
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody AuthDto authDto){
+
         try{
             String username = authDto.getUsername();
             if(userService.findByUsername(username)!=null){
