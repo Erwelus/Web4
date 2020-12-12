@@ -25,14 +25,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    private static final String LOGIN_ENDPOINT = "/api/auth/**";
+    private static final String LOGIN_PAGE = "/application/";
+    private static final String REFRESH_ENDPOINT = "/api/refresh/**";
+    private static final String STATIC_CONTENT ="/static/**";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .httpBasic().disable()
+                .csrf().disable() //ДЛЯ ПОСТМЕНА
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register", "/login").permitAll()
+                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers("/api/app/test").permitAll()
+                .antMatchers(LOGIN_PAGE).permitAll()
+                .antMatchers(REFRESH_ENDPOINT).permitAll()
+                .antMatchers(STATIC_CONTENT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

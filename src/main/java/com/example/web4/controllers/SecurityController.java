@@ -10,18 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NonUniqueResultException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping(value = "/api/auth/")
 public class SecurityController {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -54,7 +53,7 @@ public class SecurityController {
             Map<Object, Object> response = new HashMap<>();
             response.put("description", "User with username " + authDto.getUsername() + " not found");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }catch (IncorrectResultSizeDataAccessException | NonUniqueResultException ex){
+        }catch (AuthenticationException ex){
             Map<Object, Object> response = new HashMap<>();
             response.put("description", "Wrong password");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
