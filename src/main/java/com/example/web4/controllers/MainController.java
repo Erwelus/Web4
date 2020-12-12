@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/app/")
 public class MainController {
-
     private final UserService userService;
     private final ResultService resultService;
     private final ResultRepository resultRepository;
