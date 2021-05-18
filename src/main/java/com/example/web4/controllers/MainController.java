@@ -1,6 +1,7 @@
 package com.example.web4.controllers;
 
 import com.example.web4.dto.ResultDto;
+import com.example.web4.mbeans.ResultCountMBean;
 import com.example.web4.model.Result;
 import com.example.web4.repository.ResultRepository;
 import com.example.web4.service.ResultService;
@@ -39,7 +40,7 @@ public class MainController {
 
     @PostMapping("clear")
     public ResponseEntity clear(){
-        resultRepository.deleteAll();
+        resultService.deleteAllByOwner(userService.getCurrentUser());
         return ResponseEntity.ok("");
     }
 

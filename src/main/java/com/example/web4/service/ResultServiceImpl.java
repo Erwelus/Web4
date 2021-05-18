@@ -56,4 +56,11 @@ public class ResultServiceImpl implements ResultService{
         }
         return "["+joiner.toString()+"]";
     }
+
+    @Override
+    public void deleteAllByOwner(User owner) {
+        resultCountMBean.setMisses(owner.getUsername(), 0);
+        resultCountMBean.setTotal(owner.getUsername(), 0);
+        resultRepository.deleteByOwner(owner);
+    }
 }

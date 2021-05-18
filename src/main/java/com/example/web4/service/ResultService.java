@@ -12,4 +12,5 @@ public interface ResultService {
     Result prepareResult(Double x, Double y, Double r, User user);
     List<Result> getAllForOwner(User owner);
     String prepareToPrimeReact(List<Result> results);
+    void deleteAllByOwner(User owner);
 }
