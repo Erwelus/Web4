@@ -1,5 +1,6 @@
 package com.example.web4.service;
 
+import com.example.web4.mbeans.ResultCountMBeanImpl;
 import com.example.web4.model.Result;
 import com.example.web4.model.User;
 import com.example.web4.repository.ResultRepository;
@@ -10,10 +11,11 @@ import java.util.StringJoiner;
 
 @Service
 public class ResultServiceImpl implements ResultService{
-
+    private final ResultCountMBeanImpl resultCountMBean;
     private final ResultRepository resultRepository;
 
-    public ResultServiceImpl(ResultRepository resultRepository) {
+    public ResultServiceImpl(ResultRepository resultRepository, ResultCountMBeanImpl impl) {
+        this.resultCountMBean = impl;
         this.resultRepository = resultRepository;
     }
     @Override
@@ -36,6 +38,15 @@ public class ResultServiceImpl implements ResultService{
 
     @Override
     public List<Result> getAllForOwner(User owner) {
+        List<Result> list = resultRepository.findByOwner(owner);
+        resultCountMBean.setTotal(owner.getUsername(), list.size());
+        int misses = 0;
+        for(Result r : list){
+            if(!r.getHit()){
+                misses++;
+            }
+        }
+        resultCountMBean.setMisses(owner.getUsername(), misses);
         return resultRepository.findByOwner(owner);
     }
     @Override
