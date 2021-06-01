@@ -39,7 +39,9 @@ public class ResultServiceImpl implements ResultService{
     @Override
     public List<Result> getAllForOwner(User owner) {
         List<Result> list = resultRepository.findByOwner(owner);
-        resultCountMBean.setTotal(owner.getUsername(), list.size());
+        if (!list.isEmpty()) {
+            resultCountMBean.setTotal(owner.getUsername(), list.size(), list.get(list.size() - 1).getHit());
+        }
         int misses = 0;
         for(Result r : list){
             if(!r.getHit()){
@@ -71,7 +73,7 @@ public class ResultServiceImpl implements ResultService{
     @Override
     public void deleteAllByOwner(User owner) {
         resultCountMBean.setMisses(owner.getUsername(), 0);
-        resultCountMBean.setTotal(owner.getUsername(), 0);
+        resultCountMBean.setTotal(owner.getUsername(), 0, true);
         resultRepository.deleteByOwner(owner);
     }
 }
